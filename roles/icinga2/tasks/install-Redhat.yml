@@ -1,0 +1,7 @@
+---
+- name: install additional icinga2 packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - icinga2-ido-{{ icinga2_ido_engine }}

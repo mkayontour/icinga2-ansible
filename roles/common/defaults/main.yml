@@ -1,0 +1,7 @@
+icinga2_yum:
+  baseurl: http://packages.icinga.com/epel/$releasever/release/
+  gpgkey: http://packages.icinga.com/icinga.key
+
+icinga2_apt:
+  repo: deb https://packages.icinga.com/debian icinga-jessie main
+  key: https://packages.icinga.com/icinga.key

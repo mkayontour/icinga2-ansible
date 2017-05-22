@@ -1,0 +1,15 @@
+
+library "db_ido_psql"
+
+object IdoMysqlConnection "ido-psql" {
+{% for key, value in icinga2_ido_connection.iteritems() %}
+  {{ key }} = "{{ value }}"
+{% endfor %}
+{% if icinga2_ido_cleanup is defined %}
+  cleanup = {
+{% for key, value in icinga2_ido_cleanup.iteritems() %}
+     {{ key }} = {{ value }}
+{% endfor %}
+  }
+{% endif %}
+}

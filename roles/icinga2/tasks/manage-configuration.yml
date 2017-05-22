@@ -1,0 +1,7 @@
+---
+- name: Disable conf.d on Client
+  replace:
+    destfile: /etc/icinga2/icinga2.conf
+    regexp: '^include_recursive "conf.d"$'
+    replace: '//include_recursive "conf.d"'
+  when: (icinga2_client == 'true') or (icinga2_master == true)

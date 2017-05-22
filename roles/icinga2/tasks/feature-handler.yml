@@ -1,0 +1,21 @@
+---
+# - name: enable Feature
+#   icinga2_feature:
+#     name: "{{ item }}"
+#     state: present
+#   with_items: "{{ icinga2_enabled_features }}"
+#   notify: restart Icinga 2
+
+- name: enable feature
+  shell: "{{ icinga2_binary }} feature enable {{ item }}"
+  with_items: "{{ icinga2_enabled_features }}"
+
+- name: check feature config
+  shell: "{{ icinga2_binary }} daemon -C"
+  register: icinga2_config_test
+
+- name: Check config SUCCESS
+  debug:
+    msg: Notify the restart handler
+  when: icinga2_config_test.rc == 0
+  notify: restart-icinga2

@@ -1,0 +1,2 @@
+icinga2_manage_certs: false
+icinga2_master_fqdn: gazorpazorp

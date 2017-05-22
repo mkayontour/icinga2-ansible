@@ -1,0 +1,21 @@
+---
+- include: "common-{{ ansible_os_family }}.yml"
+
+
+# - name: Include all default (2.2)
+#   include_vars:
+#     #dir: 'icinga2-ansible/roles/icinga2/defaults/all'
+#     dir: 'roles/icinga2-ansible/group_vars/icinga2-master'
+
+# Common tasks for all icinga2 roles
+# this add the repository for icinga2 and installs all packages
+
+# - name: debug stuff
+#   debug:
+#     msg: "{{ icinga2_master }} and {{ icinga2_manage_certs }}"
+
+# - name: install master packages
+#   include_role:
+#     name: icinga2-ansible/roles/icinga2
+#     tasks_from: setup-ca
+#   when: icinga2_manage_certs == 'force' and icinga2_master

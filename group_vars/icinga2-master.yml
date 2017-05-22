@@ -1,0 +1,16 @@
+icinga2_manage_certs: force
+icinga2_enabled_features:
+  - ido-mysql
+  - notification
+  - checker
+  - api
+  - mainlog
+  - graphite
+mysql_databases:
+  - name: icinga
+mysql_root_password: "{{ vault_mysql_root_password }}"
+mysql_users:
+  - name: icinga
+    host: "localhost"
+    password: "{{ vault_icinga_mysql_user }}"
+    priv: "icinga.*:ALL"

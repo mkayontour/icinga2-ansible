@@ -1,0 +1,30 @@
+---
+- name: give ido
+  debug:
+    msg: "{{ icinga2_ido_connection }}"
+
+- name: Check Icinga 2 schema version
+  command: mysql -u "{{ icinga2_ido_connection.user }}" -p"{{ icinga2_ido_connection.password }}" "{{ icinga2_ido_connection.database }}" -Ns -e "select version from "{{ icinga2_ido_connection.database }}".icinga_dbversion;"
+  register: schema_result
+  when:
+    - icinga2_ido_engine == 'mysql'
+    - icinga2_ido_connection
+
+- name: Import icinga2 schema
+  mysql_db:
+    state: import
+    name: icinga
+    target: /usr/share/icinga2-ido-{{ icinga2_ido_engine }}/schema/{{ icinga2_ido_engine }}.sql
+  ignore_errors: yes
+  when:
+    - icinga2_master == true
+    - icinga2_ido_engine == 'mysql'
+    - not schema_result.stdout == "1.14.2"
+
+- name: setup database connection
+  template:
+    dest: /etc/icinga2/features-available/ido-{{ icinga2_ido_engine }}.conf
+    src: templates/ido-{{ icinga2_ido_engine }}.j2
+  when:
+    - icinga2_master == true
+    - icinga2_ido_connection
