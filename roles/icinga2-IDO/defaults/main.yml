@@ -1,15 +1,4 @@
----
-
-icinga2_binary: /usr/sbin/icinga2
-icinga2_api_port: 5665
 icinga2_ido_engine: mysql
-icinga2_service: icinga2
-icinga2_master_fqdn: false
-icinga2_master: false
-icinga2_client: false
-
-icinga2_enabled_features: false
-
 icinga2_ido_connection:
   host: 127.0.0.1
   port: 3306

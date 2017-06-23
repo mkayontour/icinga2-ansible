@@ -1,0 +1,11 @@
+library "perfdata"
+
+object GelfWriter "gelf" {
+{% for key, value in icinga2_feature.gelf.iteritems() %}
+{% if value | bool == False and not value | string == "false" %}
+  {{ key }} = "{{ value }}"
+{% else %}
+  {{ key }} = {{ value }}
+{% endif %}
+{% endfor %}
+}

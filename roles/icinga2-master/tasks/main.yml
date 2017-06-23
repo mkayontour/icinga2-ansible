@@ -1,0 +1,23 @@
+---
+- name: checking required variables for the module
+  fail: msg=" "{{ item }}" should be defined!"
+  when:
+    - not {{ item }}
+    - icinga2_master == true
+  with_items:
+    - icinga2_master_fqdn
+
+- name: generate ca
+  include_role:
+    name: icinga2-ansible/roles/icinga2-ca
+  when: icinga2_master and icinga2_manage_certs == 'force'
+
+- name: generate self-signed certs
+  include_role:
+    name: icinga2-ansible/roles/icinga2-certs
+  when: icinga2_master and icinga2_manage_certs == 'force'
+
+- name: setup database connection
+  include_role:
+    name: icinga2-ansible/roles/icinga2-IDO
+  when: icinga2_ido_connection

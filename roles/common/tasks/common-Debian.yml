@@ -2,16 +2,19 @@
 - apt_key:
     url: "{{ icinga2_apt.key }}"
     state: present
-  when: {{ icinga2_apt.key }}
+  when:
+    - {{ icinga2_apt.key }}
+    - icinga2_manage_repos
 
 - apt_repository:
-    repo: {{ icinga2_apt.repo }}
+    repo: "{{ icinga2_apt.repo }}"
     state: present
     update_cache: yes
+  when: icinga2_manage_repos
 
 - name: install icinga 2 packages
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
     - icinga2

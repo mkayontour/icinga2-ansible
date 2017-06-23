@@ -1,5 +1,7 @@
 ---
-- include: setup-ca.yml
+- name: setup ca
+  include_role:
+    name: icinga2-ansible/roles/icinga2-ca
   when:
     - icinga2_master == true
     - icinga2_manage_certs == 'force'
@@ -68,19 +70,21 @@
     --zone {{ inventory_hostname }} \
     --master_host {{ icinga2_master_fqdn }} \
     --trustedcert /etc/icinga2/pki/trusted-master.crt \
-    --cn {{ inventory_hostname }}
+    --cn {{ inventory_hostname }} \
+    --accept-commands \
+    --accept-config
   when:
     - icinga2_client == true
     - icinga2_manage_certs == 'force'
 
-- name: Test config before restart Icinga 2
-  shell: "{{ icinga2_binary }} daemon -C"
-  register: icinga2_config_test
+# - name: Test config before restart Icinga 2
+#   shell: "{{ icinga2_binary }} daemon -C"
+#   register: icinga2_config_test
 
-- name: Restart Icinga 2 after node setup
-  service:
-    name: icinga2
-    state: restarted
-  when:
-    - icinga2_config_test.rc == 0
-    - icinga2_manage_certs == 'force'
+# - name: Restart Icinga 2 after node setup
+#   service:
+#     name: icinga2
+#     state: restarted
+#   when:
+#     - icinga2_config_test.rc == 0
+#     - icinga2_manage_certs == 'force'

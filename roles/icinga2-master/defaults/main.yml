@@ -1,0 +1,4 @@
+icinga2_master: true
+icinga2_client: false
+icinga2_manage_certs: false
+icinga2_ido_engine: mysql

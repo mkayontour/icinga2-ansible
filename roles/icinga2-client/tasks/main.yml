@@ -1,0 +1,13 @@
+---
+
+- name: do common client installation
+  include_role:
+    name: icinga2-ansible/roles/common
+
+- name: do certificate creation
+  include_role:
+    name: icinga2-ansible/roles/icinga2-certs
+
+- name: disable default configuration
+  include_role:
+    name: icinga2-ansible/roles/icinga2-base

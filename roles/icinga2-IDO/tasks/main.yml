@@ -1,4 +1,14 @@
 ---
+- name: checking required variables for the module
+  fail: msg=" "{{ item }}" should be defined!"
+  when:
+    - not {{ item }}
+    - icinga2_master == true
+  with_items:
+    - icinga2_ido_engine
+
+- include: install-{{ ansible_os_family }}.yml
+
 - name: give ido
   debug:
     msg: "{{ icinga2_ido_connection }}"

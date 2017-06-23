@@ -1,3 +1,5 @@
+
+icinga2_manage_repos: true
 icinga2_yum:
   baseurl: http://packages.icinga.com/epel/$releasever/release/
   gpgkey: http://packages.icinga.com/icinga.key

@@ -6,6 +6,27 @@
 #   with_items: "{{ icinga2_enabled_features }}"
 #   notify: restart Icinga 2
 
+- name: get list of enabled features
+  shell: "{{ icinga2_binary }} feature list"
+  register: icinga2_feature_list
+
+- name: echo list
+  debug:
+    msg: "{{ icinga2_feature }}"
+
+- name: echo icinga2_feature
+  debug:
+    msg: "{{ item }}"
+  with_items: "{{ icinga2_feature }}"
+
+- name: setup features
+  template:
+    dest: /etc/icinga2/features-available/{{ item.key }}.conf
+    src: templates/feature-{{ item.key }}.j2
+  with_dict: "{{ icinga2_feature }}"
+  when: "{{ icinga2_feature }}"
+  notify: restart-icinga2
+
 - name: enable feature
   shell: "{{ icinga2_binary }} feature enable {{ item }}"
   with_items: "{{ icinga2_enabled_features }}"

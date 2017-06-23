@@ -1,17 +1,18 @@
 ---
 - name: Setup Icinga 2 master certificate authoritie
   shell: "{{ icinga2_binary }} node setup --master --cn {{ icinga2_master_fqdn }}"
-  when: icinga2_master
-  # args:
-  #   creates: /etc/icinga2/pki/ca.crt
+  when: icinga2_manage_certs == force
+  register: icinga2_ca_ready
 
 - name: Test config before restart Icinga 2
   shell: "{{ icinga2_binary }} daemon -C"
   register: icinga2_config_test
+  when: icinga2_ca_ready.changed
 
 - name: Restart Icinga 2 after master setup
   service:
     name: icinga2
     state: restarted
   when:
+    - icinga2_ca_ready.changed
     - icinga2_config_test.rc == 0

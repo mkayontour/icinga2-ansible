@@ -1,0 +1,11 @@
+library "perfdata"
+
+object OpenTsdbWriter "opentsdb" {
+{% for key, value in icinga2_feature.opentsdb.iteritems() %}
+{% if value | bool == False and not value | string == "false" %}
+  {{ key }} = "{{ value }}"
+{% else %}
+  {{ key }} = {{ value }}
+{% endif %}
+{% endfor %}
+}

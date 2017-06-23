@@ -3,8 +3,9 @@
   yum_repository:
     name: icinga-stable-release
     description: icinga2 latest repository
-    baseurl: {{ icinga2_yum.baseurl }}
-    gpgkey: {{ icinga2_yum.gpgkey }}
+    baseurl: "{{ icinga2_yum.baseurl }}"
+    gpgkey: "{{ icinga2_yum.gpgkey }}"
+  when: icinga2_manage_repos
 
 
 - name: install basic packages

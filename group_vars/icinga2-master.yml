@@ -1,11 +1,6 @@
-icinga2_manage_certs: force
-icinga2_enabled_features:
-  - ido-mysql
-  - notification
-  - checker
-  - api
-  - mainlog
-  - graphite
+#icinga2_manage_certs: force
+#icinga2_master: true
+
 mysql_databases:
   - name: icinga
 mysql_root_password: "{{ vault_mysql_root_password }}"
