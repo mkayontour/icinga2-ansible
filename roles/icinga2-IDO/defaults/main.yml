@@ -1,11 +1,12 @@
-icinga2_ido_engine: mysql
-icinga2_ido_connection:
-  host: 127.0.0.1
-  port: 3306
-  user: icinga
-  password: icinga
-  database: icinga
-icinga2_ido_cleanup:
-  downtimehistory_age: 48h
-  contactnotifications_age: 31d
-  eventhandlers_age: 7d
+icinga2:
+  ido_engine: mysql
+  ido_connection:
+    host: 127.0.0.1
+    port: 3306
+    user: icinga
+    password: icinga
+    database: icinga
+  ido_cleanup:
+    downtimehistory_age: 48h
+    contactnotifications_age: 31d
+    eventhandlers_age: 7d
