@@ -3,21 +3,21 @@
   include_role:
     name: icinga2-ansible/roles/icinga2-ca
   when:
-    - icinga2_master == true
-    - icinga2_manage_certs == 'force'
+    - icinga2.master == true
+    - icinga2.manage_certs == 'force'
 
 - name: generate ticket on the icinga master and save it as a variable
-  shell: "{{ icinga2_binary }} pki ticket --cn {{ inventory_hostname }}"
-  register: icinga2_client_ticket
+  shell: "{{ icinga2.binary }} pki ticket --cn {{ inventory_hostname }}"
+  register: icinga2.client_ticket
   when:
-    - (icinga2_client == true) or (icinga2_master == true)
-    - icinga2_manage_certs == 'force'
-  delegate_to: "{{ icinga2_master_fqdn }}"
+    - (icinga2.client == true) or (icinga2.master == true)
+    - icinga2.manage_certs == 'force'
+  delegate_to: "{{ icinga2.master_fqdn }}"
 
 - name: give ticket
   debug:
-    msg: "{{ icinga2_client_ticket['stdout'] }}"
-  when: icinga2_manage_certs == 'force'
+    msg: "{{ icinga2.client_ticket['stdout'] }}"
+  when: icinga2.manage_certs == 'force'
 
 - name: create pki folder on clients
   file:
@@ -26,56 +26,56 @@
     mode: 0700
     owner: icinga
     group: icinga
-  when: icinga2_client == true
+  when: icinga2.client == true
 
 - name: create cert
   shell: |
-    {{ icinga2_binary }} pki new-cert \
+    {{ icinga2.binary }} pki new-cert \
     --cn {{ inventory_hostname }} \
     --key /etc/icinga2/pki/{{ inventory_hostname }}.key \
     --cert /etc/icinga2/pki/{{ inventory_hostname }}.crt \
   when:
-    - (icinga2_client == true) or (icinga2_master == true)
-    - icinga2_manage_certs == 'force'
+    - (icinga2.client == true) or (icinga2.master == true)
+    - icinga2.manage_certs == 'force'
 
 - name: save the masters cert as trustedcert
   shell: |
-    {{ icinga2_binary }} pki save-cert \
+    {{ icinga2.binary }} pki save-cert \
     --key /etc/icinga2/pki/{{ inventory_hostname }}.key \
     --cert /etc/icinga2/pki/{{ inventory_hostname }}.crt \
     --trustedcert /etc/icinga2/pki/trusted-master.crt \
-    --host {{ icinga2_master_fqdn }}
+    --host {{ icinga2.master_fqdn }}
   when:
-    - (icinga2_client == true) or (icinga2_master == true)
-    - icinga2_manage_certs == 'force'
+    - (icinga2.client == true) or (icinga2.master == true)
+    - icinga2.manage_certs == 'force'
 
 - name: request the certificate from the icinga server
   shell: |
-    {{ icinga2_binary }} pki request \
-    --host {{ icinga2_master_fqdn }} \
-    --port {{ icinga2_api_port }} \
-    --ticket {{ icinga2_client_ticket['stdout'] }} \
+    {{ icinga2.binary }} pki request \
+    --host {{ icinga2.master_fqdn }} \
+    --port {{ icinga2.api_port }} \
+    --ticket {{ icinga2.client_ticket['stdout'] }} \
     --key /etc/icinga2/pki/{{ inventory_hostname }}.key \
     --cert /etc/icinga2/pki/{{ inventory_hostname }}.crt \
     --trustedcert /etc/icinga2/pki/trusted-master.crt --ca /etc/icinga2/pki/ca.key
   when:
-    - (icinga2_client == true) or (icinga2_master == true)
-    - icinga2_manage_certs == 'force'
+    - (icinga2.client == true) or (icinga2.master == true)
+    - icinga2.manage_certs == 'force'
 
 - name: node setup
   shell: |
-    {{ icinga2_binary }} node setup \
-    --ticket {{ icinga2_client_ticket['stdout'] }} \
-    --endpoint {{ icinga2_master_fqdn }} \
+    {{ icinga2.binary }} node setup \
+    --ticket {{ icinga2.client_ticket['stdout'] }} \
+    --endpoint {{ icinga2.master_fqdn }} \
     --zone {{ inventory_hostname }} \
-    --master_host {{ icinga2_master_fqdn }} \
+    --master_host {{ icinga2.master_fqdn }} \
     --trustedcert /etc/icinga2/pki/trusted-master.crt \
     --cn {{ inventory_hostname }} \
     --accept-commands \
     --accept-config
   when:
-    - icinga2_client == true
-    - icinga2_manage_certs == 'force'
+    - icinga2.client == true
+    - icinga2.manage_certs == 'force'
 
 # - name: Test config before restart Icinga 2
 #   shell: "{{ icinga2_binary }} daemon -C"
