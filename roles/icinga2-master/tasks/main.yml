@@ -9,7 +9,7 @@
 
 - name: common tasks
   include_role:
-    name: icinga2-common
+    name: icinga2-ansible/roles/common
 
 - name: generate ca
   include_role:
