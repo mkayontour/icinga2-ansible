@@ -1,2 +1,3 @@
-icinga2_manage_certs: false
-icinga2_master_fqdn: gazorpazorp
+icinga2:
+  manage_certs: false
+  master_fqdn: gazorpazorp
