@@ -7,36 +7,36 @@
 #   notify: restart Icinga 2
 
 - name: get list of enabled features
-  shell: "{{ icinga2_binary }} feature list"
-  register: icinga2_feature_list
+  shell: "{{ icinga2.binary }} feature list"
+  register: icinga2.feature_list
 
 - name: echo list
   debug:
-    msg: "{{ icinga2_feature }}"
+    msg: "{{ icinga2.feature }}"
 
 - name: echo icinga2_feature
   debug:
     msg: "{{ item }}"
-  with_items: "{{ icinga2_feature }}"
+  with_items: "{{ icinga2.feature }}"
 
 - name: setup features
   template:
     dest: /etc/icinga2/features-available/{{ item.key }}.conf
     src: templates/feature-{{ item.key }}.j2
-  with_dict: "{{ icinga2_feature }}"
-  when: "{{ icinga2_feature }}"
+  with_dict: "{{ icinga2.feature }}"
+  when: "{{ icinga2.feature }}"
   notify: restart-icinga2
 
 - name: enable feature
-  shell: "{{ icinga2_binary }} feature enable {{ item }}"
-  with_items: "{{ icinga2_enabled_features }}"
+  shell: "{{ icinga2.binary }} feature enable {{ item }}"
+  with_items: "{{ icinga2.enabled_features }}"
 
 - name: check feature config
-  shell: "{{ icinga2_binary }} daemon -C"
-  register: icinga2_config_test
+  shell: "{{ icinga2.binary }} daemon -C"
+  register: icinga2.config_test
 
 - name: Check config SUCCESS
   debug:
     msg: Notify the restart handler
-  when: icinga2_config_test.rc == 0
+  when: icinga2.config_test.rc == 0
   notify: restart-icinga2

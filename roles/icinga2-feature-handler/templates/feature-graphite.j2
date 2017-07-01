@@ -1,7 +1,7 @@
 library "perfdata"
 
 object GraphiteWriter "graphite" {
-{% for key, value in icinga2_feature.graphite.iteritems() %}
+{% for key, value in icinga2.feature.graphite.iteritems() %}
 {% if value | bool == False and not value | string == "false" %}
   {{ key }} = "{{ value }}"
 {% else %}
