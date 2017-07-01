@@ -4,4 +4,3 @@
     destfile: /etc/icinga2/icinga2.conf
     regexp: '^include_recursive "conf.d"$'
     replace: '//include_recursive "conf.d"'
-  #when: icinga2_client or icinga2_master
