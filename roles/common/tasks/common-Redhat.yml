@@ -1,15 +1,11 @@
 ---
-- name:
-  debug:
-    msg: "{{ icinga2 }}"
-    
 - name: add icinga2 repository
   yum_repository:
     name: icinga-stable-release
     description: icinga2 latest repository
-    baseurl: "{{ icinga2.yum_repo.baseurl }}"
-    gpgkey: "{{ icinga2.yum_repo.gpgkey }}"
-  when: icinga2.manage_repos
+    baseurl: "{{ icinga2_yum_repo.baseurl }}"
+    gpgkey: "{{ icinga2_yum_repo.gpgkey }}"
+  when: icinga2_manage_repos
 
 
 - name: install basic packages

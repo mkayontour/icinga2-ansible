@@ -5,7 +5,7 @@
     - not {{ item }}
     - icinga2.master == true
   with_items:
-    - icinga2.master_fqdn
+    - icinga2_master_fqdn
 
 - name: common tasks
   include_role:
