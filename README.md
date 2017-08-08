@@ -1,4 +1,4 @@
-cinga 2 ansible module
+Icinga 2 ansible module
 ======
 ### A ansible module to deploy your Icinga 2 infrastruktur
 
