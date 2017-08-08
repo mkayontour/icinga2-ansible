@@ -1,4 +1,8 @@
 ---
+- name:
+  debug:
+    msg: "{{ icinga2 }}"
+    
 - name: add icinga2 repository
   yum_repository:
     name: icinga-stable-release
