@@ -1,40 +1,41 @@
 ---
-- name: checking required variables for the module
-  fail: msg=" "{{ item }}" should be defined!"
-  when:
-    - not {{ item }}
-    - icinga2_master == true
-  with_items:
-    - icinga2_ido_engine
+# - name: checking required variables for the module
+#   fail: msg=" "{{ item }}" should be defined!"
+#   when:
+#     - not {{ item }}
+#     - icinga2_master == true
+#   with_items:
+#     - icinga2_ido_engine
+#     - icinga2_ido_connection
 
 - include: install-{{ ansible_os_family }}.yml
 
 - name: give ido
   debug:
-    msg: "{{ icinga2.ido_connection }}"
+    msg: "{{ icinga2_ido_connection }}"
 
 - name: Check Icinga 2 schema version
-  command: mysql -u "{{ icinga2.ido_connection.user }}" -p"{{ icinga2.ido_connection.password }}" "{{ icinga2.ido_connection.database }}" -Ns -e "select version from "{{ icinga2.ido_connection.database }}".icinga_dbversion;"
+  command: mysql -u "{{ icinga2_ido_connection.user }}" -p"{{ icinga2_ido_connection.password }}" "{{ icinga2_ido_connection.database }}" -Ns -e "select version from "{{ icinga2_ido_connection.database }}".icinga_dbversion;"
   register: schema_result
   when:
-    - icinga2.ido_engine == 'mysql'
-    - icinga2.ido_connection
+    - icinga2_ido_engine == 'mysql'
+    - icinga2_ido_connection
 
 - name: Import icinga2 schema
   mysql_db:
     state: import
     name: icinga
-    target: /usr/share/icinga2-ido-{{ icinga2.ido_engine }}/schema/{{ icinga2.ido_engine }}.sql
+    target: /usr/share/icinga2-ido-{{ icinga2_ido_engine }}/schema/{{ icinga2_ido_engine }}.sql
   ignore_errors: yes
   when:
-    - icinga2.master == true
-    - icinga2.ido_engine == 'mysql'
+    - icinga2_master == true
+    - icinga2_ido_engine == 'mysql'
     - not schema_result.stdout == "1.14.2"
 
 - name: setup database connection
   template:
-    dest: /etc/icinga2/features-available/ido-{{ icinga2.ido_engine }}.conf
-    src: templates/ido-{{ icinga2.ido_engine }}.j2
+    dest: /etc/icinga2/features-available/ido-{{ icinga2_ido_engine }}.conf
+    src: templates/ido-{{ icinga2_ido_engine }}.j2
   when:
-    - icinga2.master == true
-    - icinga2.ido_connection
+    - icinga2_master == true
+    - icinga2_ido_connection

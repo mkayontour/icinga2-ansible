@@ -1,5 +1,4 @@
-icinga2:
-  master: true
-  client: false
-  manage_certs: false
-  ido_engine: mysql
+icinga2_master: true
+icinga2_client: false
+icinga2_manage_certs: false
+icinga2_ido_engine: mysql

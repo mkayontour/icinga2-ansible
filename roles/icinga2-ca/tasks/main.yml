@@ -1,11 +1,11 @@
 ---
 - name: Setup Icinga 2 master certificate authoritie
-  shell: "{{ icinga2.binary }} node setup --master --cn {{ icinga2.master_fqdn }}"
-  when: icinga2.manage_certs == force
+  shell: "{{ icinga2_binary }} node setup --master --cn {{ icinga2_master_fqdn }}"
+  when: icinga2_manage_certs == force
   register: icinga2.ca_ready
 
 - name: Test config before restart Icinga 2
-  shell: "{{ icinga2.binary }} daemon -C"
+  shell: "{{ icinga2_binary }} daemon -C"
   register: icinga2.config_test
   when: icinga2.ca_ready.changed
 

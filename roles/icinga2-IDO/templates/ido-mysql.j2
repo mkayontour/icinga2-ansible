@@ -2,12 +2,12 @@
 library "db_ido_mysql"
 
 object IdoMysqlConnection "ido-mysql" {
-{% for key, value in icinga2.ido_connection.iteritems() %}
+{% for key, value in icinga2_ido_connection.iteritems() %}
   {{ key }} = "{{ value }}"
 {% endfor %}
-{% if icinga2.ido_cleanup is defined %}
+{% if icinga2_ido_cleanup is defined %}
   cleanup = {
-{% for key, value in icinga2.ido_cleanup.iteritems() %}
+{% for key, value in icinga2_ido_cleanup.iteritems() %}
      {{ key }} = {{ value }}
 {% endfor %}
   }

@@ -7,7 +7,7 @@
 #   notify: restart Icinga 2
 
 - name: get list of enabled features
-  shell: "{{ icinga2.binary }} feature list"
+  shell: "{{ icinga2_binary }} feature list"
   register: icinga2.feature_list
 
 - name: echo list
@@ -28,11 +28,11 @@
   notify: restart-icinga2
 
 - name: enable feature
-  shell: "{{ icinga2.binary }} feature enable {{ item }}"
+  shell: "{{ icinga2_binary }} feature enable {{ item }}"
   with_items: "{{ icinga2.enabled_features }}"
 
 - name: check feature config
-  shell: "{{ icinga2.binary }} daemon -C"
+  shell: "{{ icinga2_binary }} daemon -C"
   register: icinga2.config_test
 
 - name: Check config SUCCESS

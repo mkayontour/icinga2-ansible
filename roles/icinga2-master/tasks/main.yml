@@ -3,7 +3,7 @@
   fail: msg=" "{{ item }}" should be defined!"
   when:
     - not {{ item }}
-    - icinga2.master == true
+    - icinga2_master == true
   with_items:
     - icinga2_master_fqdn
 
@@ -14,14 +14,14 @@
 - name: generate ca
   include_role:
     name: icinga2-ansible/roles/icinga2-ca
-  when: icinga2.master and icinga2.manage_certs == 'force'
+  when: icinga2_master and icinga2_manage_certs == 'force'
 
 - name: generate self-signed certs
   include_role:
     name: icinga2-ansible/roles/icinga2-certs
-  when: icinga2.master and icinga2.manage_certs == 'force'
+  when: icinga2_master and icinga2_manage_certs == 'force'
 
 - name: setup database connection
   include_role:
     name: icinga2-ansible/roles/icinga2-IDO
-  when: icinga2.ido_connection
+  when: icinga2_ido_engine is defined
