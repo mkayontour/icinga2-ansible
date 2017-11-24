@@ -1,5 +1,1 @@
-icinga2:
-  binary: /usr/sbin/icinga2
-  api_port: 5665
-  service: icinga2
-  master_fqdn: false
+

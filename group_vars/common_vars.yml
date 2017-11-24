@@ -1,6 +1,5 @@
-icinga2:
-  master: true
-  manage_certs: force
+icinga2_master: true
+icinga2_manage_certs: force
 
 # icinga2_master: false
 # icinga2_client: false

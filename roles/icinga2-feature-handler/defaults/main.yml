@@ -1,16 +1,17 @@
 #icinga2_enabled_features: false
 
-icinga2:
-  enabled_features:
+icinga2_enabled_features:
     - ido-mysql
     - notification
     - checker
     - api
     - mainlog
     - graphite
-  feature:
-    graphite:
-      host: 127.0.0.1
-      port: 2003
-      enable_send_thresholds: "true"
-      enable_send_metadata: "false"
+
+
+icinga2_feature:
+  graphite:
+    host: 127.0.0.1
+    port: 2003
+    enable_send_thresholds: "true"
+    enable_send_metadata: "false"
