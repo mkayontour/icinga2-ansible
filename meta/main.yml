@@ -1,0 +1,14 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: mkayontour
+  description: deploy icinga2 master and clients
+  company: "NETWAYS GmbH"
+  license: "GPL v2"
+  min_ansible_version: 2.2
+  platforms:
+    - name: EL
+      versions:
+      - 6
+      - 7
