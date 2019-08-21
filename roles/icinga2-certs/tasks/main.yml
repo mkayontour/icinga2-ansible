@@ -14,26 +14,17 @@
     - icinga2_manage_certs == 'force'
   delegate_to: "{{ icinga2_master_fqdn }}"
 
-- name: give ticket
+- name: output ticket
   debug:
     msg: "{{ icinga2_client_ticket['stdout'] }}"
   when: icinga2_manage_certs == 'force'
-
-- name: create pki folder on clients
-  file:
-    dest: /etc/icinga2/pki
-    state: directory
-    mode: 0700
-    owner: icinga
-    group: icinga
-  when: icinga2_client == true
 
 - name: create cert
   shell: |
     {{ icinga2_binary }} pki new-cert \
     --cn {{ inventory_hostname }} \
-    --key /etc/icinga2/pki/{{ inventory_hostname }}.key \
-    --cert /etc/icinga2/pki/{{ inventory_hostname }}.crt \
+    --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
+    --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
   when:
     - (icinga2_client == true) or (icinga2_master == true)
     - icinga2_manage_certs == 'force'
@@ -41,9 +32,9 @@
 - name: save the masters cert as trustedcert
   shell: |
     {{ icinga2_binary }} pki save-cert \
-    --key /etc/icinga2/pki/{{ inventory_hostname }}.key \
-    --cert /etc/icinga2/pki/{{ inventory_hostname }}.crt \
-    --trustedcert /etc/icinga2/pki/trusted-master.crt \
+    --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
+    --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
+    --trustedcert {{ icinga2_certs_directory }}trusted-master.crt \
     --host {{ icinga2_master_fqdn }}
   when:
     - (icinga2_client == true) or (icinga2_master == true)
@@ -55,9 +46,9 @@
     --host {{ icinga2_master_fqdn }} \
     --port {{ icinga2_api_port }} \
     --ticket {{ icinga2_client_ticket['stdout'] }} \
-    --key /etc/icinga2/pki/{{ inventory_hostname }}.key \
-    --cert /etc/icinga2/pki/{{ inventory_hostname }}.crt \
-    --trustedcert /etc/icinga2/pki/trusted-master.crt --ca /etc/icinga2/pki/ca.key
+    --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
+    --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
+    --trustedcert {{ icinga2_certs_directory }}trusted-master.crt --ca {{ icinga2_certs_directory }}ca.key
   when:
     - (icinga2_client == true) or (icinga2_master == true)
     - icinga2_manage_certs == 'force'
@@ -68,11 +59,13 @@
     --ticket {{ icinga2_client_ticket['stdout'] }} \
     --endpoint {{ icinga2_master_fqdn }} \
     --zone {{ inventory_hostname }} \
-    --master_host {{ icinga2_master_fqdn }} \
-    --trustedcert /etc/icinga2/pki/trusted-master.crt \
+    --parent {{ icinga2_parent_zone }} \
+    --parent_host {{ icinga2_parent_host }} \
+    --trustedcert {{ icinga2_certs_directory }}trusted-master.crt \
     --cn {{ inventory_hostname }} \
     --accept-commands \
-    --accept-config
+    --accept-config \
+    --disable-confd
   when:
     - icinga2_client == true
     - icinga2_manage_certs == 'force'
