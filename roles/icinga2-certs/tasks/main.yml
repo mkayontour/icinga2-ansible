@@ -35,31 +35,31 @@
     --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
     --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
     --trustedcert {{ icinga2_certs_directory }}trusted-master.crt \
-    --host {{ icinga2_master_fqdn }}
+    --host {{ icinga2_parent_host }}
   when:
     - (icinga2_client == true) or (icinga2_master == true)
     - icinga2_manage_certs == 'force'
-#
-# - name: request the certificate from the icinga server
-#   shell: |
-#     {{ icinga2_binary }} pki request \
-#     --host {{ icinga2_master_fqdn }} \
-#     --port {{ icinga2_api_port }} \
-#     --ticket {{ icinga2_client_ticket['stdout'] }} \
-#     --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
-#     --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
-#     --trustedcert {{ icinga2_certs_directory }}trusted-master.crt --ca {{ icinga2_certs_directory }}ca.key
-#   when:
-#     - (icinga2_client == true) or (icinga2_master == true)
-#     - icinga2_manage_certs == 'force'
+
+- name: request the certificate from the icinga server
+  shell: |
+    {{ icinga2_binary }} pki request \
+    --host {{ icinga2_master_fqdn }} \
+    --port {{ icinga2_api_port }} \
+    --ticket {{ icinga2_client_ticket['stdout'] }} \
+    --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
+    --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
+    --trustedcert {{ icinga2_certs_directory }}trusted-master.crt --ca {{ icinga2_certs_directory }}ca.key
+  when:
+    - (icinga2_client == true) or (icinga2_master == true)
+    - icinga2_manage_certs == 'force'
 
 - name: node setup
   shell: |
     {{ icinga2_binary }} node setup \
     --ticket {{ icinga2_client_ticket['stdout'] }} \
-    --endpoint {{ icinga2_master_fqdn }} \
+    --endpoint {{ icinga2_parent_endpoint }} \
     --zone {{ inventory_hostname }} \
-    --parent {{ icinga2_parent_zone }} \
+    --parent_zone {{ icinga2_parent_zone }} \
     --parent_host {{ icinga2_parent_host }} \
     --trustedcert {{ icinga2_certs_directory }}trusted-master.crt \
     --cn {{ inventory_hostname }} \
@@ -70,14 +70,14 @@
     - icinga2_client == true
     - icinga2_manage_certs == 'force'
 
-# - name: Test config before restart Icinga 2
-#   shell: "{{ icinga2_binary }} daemon -C"
-#   register: icinga2_config_test
+- name: Test config before restart Icinga 2
+  shell: "{{ icinga2_binary }} daemon -C"
+  register: icinga2_config_test
 
-# - name: Restart Icinga 2 after node setup
-#   service:
-#     name: icinga2
-#     state: restarted
-#   when:
-#     - icinga2_config_test.rc == 0
-#     - icinga2_manage_certs == 'force'
+- name: Restart Icinga 2 after node setup
+  service:
+    name: icinga2
+    state: restarted
+  when:
+    - icinga2_config_test.rc == 0
+    - icinga2_manage_certs == 'force'
