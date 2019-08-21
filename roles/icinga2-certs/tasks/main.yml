@@ -25,9 +25,9 @@
 - name: ensure certificate folder is present
   file:
     state: directory
-    path: {{ icinga2_certs_directory }}
-    owner: { icinga2_user }
-    group: {{ icinga2_group }}
+    path: "{{ icinga2_certs_directory }}"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_group }}"
 
 - name: create cert
   shell: |
