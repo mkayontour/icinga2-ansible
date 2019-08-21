@@ -19,16 +19,16 @@
     msg: "{{ icinga2_client_ticket['stdout'] }}"
   when: icinga2_manage_certs == 'force'
 
-- name: create cert
-  shell: |
-    {{ icinga2_binary }} pki new-cert \
-    --cn {{ inventory_hostname }} \
-    --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
-    --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
-  when:
-    - (icinga2_client == true) or (icinga2_master == true)
-    - icinga2_manage_certs == 'force'
-
+# - name: create cert
+#   shell: |
+#     {{ icinga2_binary }} pki new-cert \
+#     --cn {{ inventory_hostname }} \
+#     --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
+#     --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
+#   when:
+#     - (icinga2_client == true) or (icinga2_master == true)
+#     - icinga2_manage_certs == 'force'
+#
 - name: save the masters cert as trustedcert
   shell: |
     {{ icinga2_binary }} pki save-cert \
@@ -39,19 +39,19 @@
   when:
     - (icinga2_client == true) or (icinga2_master == true)
     - icinga2_manage_certs == 'force'
-
-- name: request the certificate from the icinga server
-  shell: |
-    {{ icinga2_binary }} pki request \
-    --host {{ icinga2_master_fqdn }} \
-    --port {{ icinga2_api_port }} \
-    --ticket {{ icinga2_client_ticket['stdout'] }} \
-    --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
-    --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
-    --trustedcert {{ icinga2_certs_directory }}trusted-master.crt --ca {{ icinga2_certs_directory }}ca.key
-  when:
-    - (icinga2_client == true) or (icinga2_master == true)
-    - icinga2_manage_certs == 'force'
+#
+# - name: request the certificate from the icinga server
+#   shell: |
+#     {{ icinga2_binary }} pki request \
+#     --host {{ icinga2_master_fqdn }} \
+#     --port {{ icinga2_api_port }} \
+#     --ticket {{ icinga2_client_ticket['stdout'] }} \
+#     --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
+#     --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
+#     --trustedcert {{ icinga2_certs_directory }}trusted-master.crt --ca {{ icinga2_certs_directory }}ca.key
+#   when:
+#     - (icinga2_client == true) or (icinga2_master == true)
+#     - icinga2_manage_certs == 'force'
 
 - name: node setup
   shell: |
