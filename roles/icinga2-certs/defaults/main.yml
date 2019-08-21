@@ -1,1 +1,2 @@
 icinga2_certs_directory: /var/lib/icinga2/certs/
+icinga2_master_fqdn: undefined
