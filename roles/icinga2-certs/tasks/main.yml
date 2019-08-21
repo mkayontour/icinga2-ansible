@@ -1,4 +1,7 @@
 ---
+- name: include os family variables
+  include_vars: {{ ansible_os_family }}.yml
+
 - name: setup ca
   include_role:
     name: icinga2-ansible/roles/icinga2-ca
@@ -19,16 +22,23 @@
     msg: "{{ icinga2_client_ticket['stdout'] }}"
   when: icinga2_manage_certs == 'force'
 
-# - name: create cert
-#   shell: |
-#     {{ icinga2_binary }} pki new-cert \
-#     --cn {{ inventory_hostname }} \
-#     --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
-#     --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
-#   when:
-#     - (icinga2_client == true) or (icinga2_master == true)
-#     - icinga2_manage_certs == 'force'
-#
+- name: ensure certificate folder is present
+  file:
+    state: directory
+    path: {{ icinga2_certs_directory }}
+    owner: { icinga2_user }
+    group: {{ icinga2_group }}
+
+- name: create cert
+  shell: |
+    {{ icinga2_binary }} pki new-cert \
+    --cn {{ inventory_hostname }} \
+    --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
+    --cert {{ icinga2_certs_directory }}{{ inventory_hostname }}.crt \
+  when:
+    - (icinga2_client == true) or (icinga2_master == true)
+    - icinga2_manage_certs == 'force'
+
 - name: save the masters cert as trustedcert
   shell: |
     {{ icinga2_binary }} pki save-cert \
