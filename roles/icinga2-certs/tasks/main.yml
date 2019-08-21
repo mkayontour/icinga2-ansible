@@ -53,7 +53,7 @@
 - name: request the certificate from the icinga server
   shell: |
     {{ icinga2_binary }} pki request \
-    --host {{ icinga2_master_fqdn }} \
+    --host {{ icinga2_parent_host }} \
     --port {{ icinga2_api_port }} \
     --ticket {{ icinga2_client_ticket['stdout'] }} \
     --key {{ icinga2_certs_directory }}{{ inventory_hostname }}.key \
